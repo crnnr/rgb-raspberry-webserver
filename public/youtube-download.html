@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Downloader</title>
+    <link rel="stylesheet" href="youtube-download.css">
+</head>
+<body>
+    <h1>YouTube Video Downloader</h1>
+    Enter YouTube Link:
+    <input type="text" id="youtubeLink">
+    <button onclick="downloadVideo()">Download</button>
+    <div id="progress-container" style="display:none;">
+        <label for="file">Downloading:</label>
+        <progress id="downloadProgress" value="0" max="100"></progress>
+    </div>
+    <script src="script.js"></script>
+    <div id="videos-list">
+    <!-- Videos will be dynamically inserted here -->
+    </div>
+</body>
+</html>

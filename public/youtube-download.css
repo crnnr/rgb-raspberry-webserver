@@ -1,0 +1,143 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+}
+
+input[type="text"], button {
+    width: calc(100% - 22px); /* Full width minus padding and border */
+    padding: 10px;
+    margin-top: 10px; /* Adds space above each element */
+    box-sizing: border-box; /* Include padding and border in width */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+input[type="text"] {
+    margin-bottom: 20px; /* Space between the input and the button */
+}
+
+button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#progress-container {
+    width: 70%;
+    margin-top: 20px; /* Space between the button and the progress container */
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: none; /* Hidden by default, shown during download */
+}
+
+progress {
+    width: 100%;
+    height: 20px;
+    -webkit-appearance: none; /* Removes default appearance */
+    appearance: none;
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: #eee;
+    border-radius: 4px;
+#videos-list {
+    margin-top: 20px;
+}
+
+.video-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.video-thumbnail {
+    width: 120px;
+    height: 68px; /* 16:9 aspect ratio */
+    overflow: hidden;
+    margin-right: 10px;
+}
+
+.video-title {
+    flex-grow: 1;
+}}
+
+progress[value]::-webkit-progress-value {
+    background-color: #4CAF50;
+    border-radius: 4px;
+}
+
+progress[value]::-moz-progress-bar {
+    background-color: #4CAF50;
+    border-radius: 4px;
+}
+
+#videos-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+    padding-left: 20px;
+}
+
+.video-item {
+    flex: 1 0 auto; /* Allow the box to shrink but also take up as much space as needed */
+    max-width: 160px; /* Set a maximum width for each video item */
+    margin-bottom: 20px;
+    text-align: center; /* Center-align the text (and implicitly any inline elements like img) */
+}
+
+.video-thumbnail img {
+    width: 100%; /* This ensures the thumbnail image takes up the full width of its container */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 90px; /* Set a maximum height for thumbnails if desired */
+    object-fit: cover; /* This will cover the area of the img tag, useful if you set a max-height */
+}
+
+
+/* Styles for the container of the input field, if it exists */
+.input-container {
+    margin-bottom: 20px; /* Add space below the input field */
+}
+
+/* Styles for the label */
+label {
+    display: block; /* Make the label a block element to take up the full width */
+    margin-bottom: 8px; /* Space between the label and the input field */
+    color: #333; /* Dark grey color for the text */
+    font-size: 18px; /* Slightly larger text for the label */
+    font-weight: bold; /* Make the label text bold */
+}
+
+/* Styles for the input field */
+input[type="text"] {
+    width: 100%; /* Make the input field take up the full width of its container */
+    padding: 10px; /* Add some padding inside the input field for better text visibility */
+    margin-bottom: 10px; /* Add some space below the input field */
+    border: 1px solid #ccc; /* A light grey border for the input field */
+    border-radius: 4px; /* Slightly rounded corners for the input field */
+    font-size: 16px; /* A reasonable font size for input text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* A subtle shadow for some depth */
+}
+
+/* Styles for the input field on focus to highlight it */
+input[type="text"]:focus {
+    border-color: #80bdff; /* A blue border color when the input is focused */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* A blue shadow to match the border */
+}

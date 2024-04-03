@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Matrix Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>LED Matrix Control</h1>
+    Select "-D" value for LED Matrix:
+    <select id="dValue">
+	<option value="0">0</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9" selected>9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+    </select>
+    <button onclick="controlLed('on')">Turn On with "-D"</button>
+    <button onclick="controlLed('off')">Turn Off</button>
+
+    <script>
+        function controlLed(action) {
+            let url = `/led/${action}`;
+            if (action === 'on') {
+                const dValue = document.getElementById('dValue').value;
+                url += `?d=${dValue}`;
+            }
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+
+
