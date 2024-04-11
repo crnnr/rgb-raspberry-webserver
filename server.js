@@ -20,7 +20,7 @@ app.get('/led/on', (req, res) => {
         return res.status(400).send('Invalid "-D" value');
     }
 
-    const command = `sudo /home/pi/rpi-rgb-led-matrix-master/examples-api-use/demo -D ${dValue} --led-rows 64 --led-cols 64 --led-chained 3 --led-parallel 2 --led-slowdown-gpio 4 --led-brightness 100`;
+    const command = `sudo /home/pi/rpi-rgb-led-matrix-master/examples-api-use/demo -D ${dValue} --led-rows 64 --led-cols 64 --led-chained 6 --led-slowdown-gpio 4 --led-brightness 100 --led-daemon`;
     exec(command, (err, stdout, stderr) => {
         if (err) {
             console.error(`exec error: ${err}`);
@@ -33,7 +33,7 @@ app.get('/led/on', (req, res) => {
 // Turn off the LED matrix
 app.get('/led/off', (req, res) => {
     // Ensure you replace this command with the actual one to clear the LED matrix
-    exec('sudo your_command_to_clear_matrix', (err, stdout, stderr) => {
+    exec('sudo pkill -f demo', (err, stdout, stderr) => {
         if (err) {
             console.error(`exec error: ${err}`);
             return res.status(500).send('Failed to turn off LED Matrix');
@@ -50,6 +50,26 @@ app.post('/api/shutdown', (req, res) => {
             return res.status(500).send('Failed to shut down');
         }
         res.send('Shutting down...');
+    });
+});
+
+app.get('/display-video', (req, res) => {
+    const videoName = req.query.name;
+    if (!videoName) {
+        return res.status(400).json({ message: 'No video name provided' });
+    }
+
+    const videoPath = `/home/pi/web/media/${videoName}.webm`;
+    const command = `sudo ./public/utils/video-viewer --led-cols=64 --led-rows=64 --led-chain=6 --led-limit-refresh=200 --led-slowdown-gpio=4 --led-pixel-mapper="U-Mapper;Rotate:180" -F ${videoPath}`;
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            return res.status(500).json({ message: 'Error displaying the video' });
+        }
+        console.log(`stdout: ${stdout}`);
+        console.error(`stderr: ${stderr}`);
+        res.json({ message: 'Video is being displayed on the LED matrix.' });
     });
 });
 

@@ -8,6 +8,7 @@
 }
 
 body, html {
+    height: 100%;
     margin: 0;
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -157,6 +158,13 @@ select {
     height: auto;
 }
 
+.content-container { /* This should be the main container of your content */
+    flex: 1;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+}
+
 .youtube-downloader-container {
     text-align: center;
     background-color: white;
@@ -164,6 +172,11 @@ select {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.full-width-element { /* Replace with your actual element selector */
+    width: 100%;
+}
+
 
 input[type="text"] {
     width: 80%;
