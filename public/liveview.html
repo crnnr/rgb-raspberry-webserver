@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Matrix Liveview</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="content-container">
+        <h2>LED Matrix Liveview</h2>
+        <p>This page displays the live state of the LED matrix. Each pixel represents an LED. The color of the pixel indicates the state of the LED.</p>
+        <div id="led-matrix"></div>
+        <p>Click the button below to go back to the LED Program Control page.</p>
+        <button onclick="window.location.href='led-control.html';">Back to LED Program Control</button>
+    </div>
+    <script>
+        const ledMatrix = document.getElementById('led-matrix');
+        const width = 256;
+        const height = 128;
+    
+        ledMatrix.style.display = 'grid';
+        ledMatrix.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+        ledMatrix.style.gridTemplateRows = `repeat(${height}, 1fr)`;
+    
+        for (let i = 0; i < width * height; i++) {
+            const led = document.createElement('div');
+            led.className = 'led';
+            ledMatrix.appendChild(led);
+        }
+    </script>
+</body>
+</html>

@@ -13,7 +13,11 @@ body, html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
-    height: 100%;
+    height: 100vh; /* Changed from 100% to 100vh */
+    display: flex; /* Added */
+    justify-content: center; /* Added */
+    align-items: center; /* Added */
+    flex-direction: column; /* Added */
 }
 
 header {
@@ -31,6 +35,7 @@ main {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-align: center;
 }
 
 footer {
@@ -41,6 +46,53 @@ footer {
     bottom: 0;
     width: 100%;
     padding: 10px 0;
+}
+
+#about {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: var(--box-shadow);
+    margin-top: 20px;
+    text-align: center;
+}
+
+#led-matrix {
+    line-height: 0;
+}
+
+.content-container {
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: auto;
+    text-align: center;
+}
+
+.led {
+    background-color: #000; /* Off state */
+    border: 1px solid #333; /* Border to separate LEDs */
+}
+
+.led.on {
+    background-color: #f00; /* On state */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#led-matrix {
+    width: 90vw;
+    height: 90vh;
+    overflow: auto;
 }
 
 /* Buttons and controls */
@@ -92,6 +144,17 @@ a:focus {
 /* Enhancements for the dropdown */
 select {
     cursor: pointer;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-container img {
+    width: 150%; /* Adjust as needed */
+    height: auto;
 }
 
 .youtube-downloader-container {
