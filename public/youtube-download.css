@@ -107,6 +107,7 @@ progress[value]::-moz-progress-bar {
     height: auto; /* Maintain aspect ratio */
     max-height: 90px; /* Set a maximum height for thumbnails if desired */
     object-fit: cover; /* This will cover the area of the img tag, useful if you set a max-height */
+    cursor: pointer;
 }
 
 
