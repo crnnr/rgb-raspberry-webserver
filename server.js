@@ -6,9 +6,7 @@ const app = express();
 const port = 3000;
 
 
-// Middleware to parse JSON bodies
 app.use(express.json());
-// Serve static files from 'public' directory
 app.use(express.static('public'));
 app.use('/thumbnails', express.static(path.join(__dirname, 'media', 'thumbnails')));
 
@@ -32,7 +30,6 @@ app.get('/led/on', (req, res) => {
 
 // Turn off the LED matrix
 app.get('/led/off', (req, res) => {
-    // Ensure you replace this command with the actual one to clear the LED matrix
     exec('sudo pkill -f demo', (err, stdout, stderr) => {
         if (err) {
             console.error(`exec error: ${err}`);
@@ -86,7 +83,7 @@ app.post('/download-video', (req, res) => {
         return res.status(400).json({ message: 'Invalid YouTube link' });
     }
 
-    // Define paths for the video and its thumbnail
+    // Paths for the video and its thumbnail
     const videoPath = `/home/pi/web/media/${videoId}.webm`;
     const thumbnailPath = `/home/pi/web/media/thumbnails/${videoId}_thumbnail.jpg`;
 
@@ -139,6 +136,68 @@ app.get('/list-videos', (req, res) => {
     });
 });
 
+app.use(express.json());
+app.use(express.static('public'));
+
+let gameState = [["", "", ""], ["", "", ""], ["", "", ""]];
+
+app.post('/move', (req, res) => {
+    const { row, col, player } = req.body;
+    if (gameState[row][col] === "") {
+        gameState[row][col] = player;
+        updateLEDMatrix();
+        res.json({ success: true, gameState });
+    } else {
+        res.status(400).json({ success: false, message: "Cell already occupied" });
+    }
+});
+
+app.post('/display-winner', (req, res) => {
+    const { winner } = req.body;
+    const message = `${winner} wins!`;
+    displayMessageOnMatrix(message); // Your implementation to display on matrix
+    res.send("Winner displayed on LED matrix");
+});
+
+function displayMessageOnMatrix(message) {
+    console.log(message);  // Log or send command to LED matrix
+    // Example: exec(`some-command-to-display-text --message '${message}'`);
+}
+
+app.post('/reset-game', (req, res) => {
+    gameState = [["", "", ""], ["", "", ""], ["", "", ""]];
+    clearLEDMatrix();  // Clear the LED matrix display
+    initLEDMatrix();  // Initialize a 3x3 grid on the LED matrix
+    res.send("Game and LED matrix reset successfully");
+});
+
+function updateLEDMatrix() {
+    // Update the LED matrix based on gameState
+    const colors = { X: 'R', O: 'G' }; // X is Red, O is Green
+    gameState.forEach((row, i) => {
+        row.forEach((cell, j) => {
+            if (cell !== "") {
+                let command = `sudo ./matrix-tool --set-pixel ${j},${i},${colors[cell]}`;
+                exec(command, (err) => {
+                    if (err) console.error(`Error setting pixel: ${err}`);
+                });
+            }
+        });
+    });
+}
+
+function clearLEDMatrix() {
+    let command = 'sudo /home/pi/rpi-rgb-led-matrix-master/utils/led-clear';
+    exec(command, (err) => {
+        if (err) console.error(`exec error: ${err}`);
+    });
+}
+
+function initLEDMatrix() {
+    console.log("Initializing LED Matrix with a 3x3 grid");
+}
+
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
+

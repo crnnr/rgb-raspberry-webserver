@@ -41,8 +41,8 @@ function fetchVideos() {
                 const correctThumbnailPath = video.thumbnail.replace('/media/thumbnails/', '/thumbnails/');
                 const videoElement = document.createElement('div');
                 videoElement.className = 'video-item';
-                const videoName = video.title.replace('.webm', ''); // Assuming the title includes .webm extension
-                videoElement.dataset.videoName = videoName; // Set the correct video name
+                const videoName = video.title.replace('.webm', '');
+                videoElement.dataset.videoName = videoName;
                 videoElement.innerHTML = `
                     <div class="video-thumbnail">
                         <img src="${correctThumbnailPath}" alt="Thumbnail" style="width: 100%; height: auto;">
@@ -51,7 +51,7 @@ function fetchVideos() {
                 `;
                 videosListContainer.appendChild(videoElement);
             });
-            setupVideoClickListeners(); // Set up click listeners after videos are loaded
+            setupVideoClickListeners();
         })
     .catch(error => console.error('Error fetching videos:', error));
 }
@@ -76,13 +76,13 @@ function downloadVideo() {
     const progressBar = document.getElementById('downloadProgress');
 
     if (link) {
-        document.getElementById('youtubeLink').value = ''; // Clear input field
-        progressContainer.style.display = 'block'; // Show progress bar container
+        document.getElementById('youtubeLink').value = ''; // Clear input
+        progressContainer.style.display = 'block'; // progress bar container
         progressBar.value = 0; // Reset progress bar
 
         let progressInterval = setInterval(() => {
             if (progressBar.value < 90) {
-                progressBar.value += 10; // Simulate some progress
+                progressBar.value += 10; // Simulate progress lol
             }
         }, 1000); // Update every second
 
@@ -95,9 +95,9 @@ function downloadVideo() {
         })
         .then(response => response.json())
         .then(data => {
-            clearInterval(progressInterval); // Stop the simulated progress
-            progressBar.value = 100; // Set progress to 100% to indicate completion
-            alert(data.message); // Show success message
+            clearInterval(progressInterval);
+            progressBar.value = 100;
+            alert(data.message);
         })
         .catch(error => {
             console.error('Error downloading the file:', error);
