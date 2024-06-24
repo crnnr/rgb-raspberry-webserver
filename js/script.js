@@ -38,14 +38,15 @@ function fetchVideos() {
             const videosListContainer = document.getElementById('videos-list');
             videosListContainer.innerHTML = ''; // Clear the container before adding new content
             videos.forEach(video => {
-                const correctThumbnailPath = video.thumbnail.replace('/media/thumbnails/', '/thumbnails/');
+                // Assuming 'video.thumbnail' gives just the filename like 'pRpeEdMmmQ0_thumbnail.jpg'
+                const thumbnailPath = `../media/thumbnails/${video.thumbnail}`;
                 const videoElement = document.createElement('div');
                 videoElement.className = 'video-item';
-                const videoName = video.title.replace('.webm', '');
+                const videoName = video.title.replace('.webm', ''); // Assuming titles are filenames
                 videoElement.dataset.videoName = videoName;
                 videoElement.innerHTML = `
                     <div class="video-thumbnail">
-                        <img src="${correctThumbnailPath}" alt="Thumbnail" style="width: 100%; height: auto;">
+                        <img src="${thumbnailPath}" alt="Thumbnail" style="width: 100%; height: auto;">
                     </div>
                     <div class="video-title">${video.title}</div>
                 `;
@@ -55,7 +56,6 @@ function fetchVideos() {
         })
     .catch(error => console.error('Error fetching videos:', error));
 }
-
 
 function controlLed(action) {
     let url = `/led/${action}`;

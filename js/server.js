@@ -7,8 +7,8 @@ const port = 3000;
 
 
 app.use(express.json());
-app.use(express.static('public'));
-app.use('/thumbnails', express.static(path.join(__dirname, 'media', 'thumbnails')));
+app.use(express.static('/home/pi/web/public'));
+app.use('/thumbnails', express.static(path.join('/home/pi/web/public/media', 'thumbnails')));
 
 
 // Turn on the LED matrix with a dynamic "-D" value
@@ -56,8 +56,8 @@ app.get('/display-video', (req, res) => {
         return res.status(400).json({ message: 'No video name provided' });
     }
 
-    const videoPath = `/home/pi/web/media/${videoName}.webm`;
-    const command = `sudo ./public/utils/video-viewer --led-cols=64 --led-rows=64 --led-chain=6 --led-limit-refresh=200 --led-slowdown-gpio=4 --led-pixel-mapper="U-Mapper;Rotate:180" -F ${videoPath}`;
+    const videoPath = `/home/pi/web/public/media/videos/${videoName}.webm`;
+    const command = `sudo ./../utils/video-viewer --led-cols=64 --led-rows=64 --led-chain=6 --led-limit-refresh=200 --led-slowdown-gpio=4 --led-pixel-mapper="U-Mapper;Rotate:180" -F ${videoPath}`;
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -84,8 +84,8 @@ app.post('/download-video', (req, res) => {
     }
 
     // Paths for the video and its thumbnail
-    const videoPath = `/home/pi/web/media/${videoId}.webm`;
-    const thumbnailPath = `/home/pi/web/media/thumbnails/${videoId}_thumbnail.jpg`;
+    const videoPath = `/home/pi/web/public/media/video/${videoId}.webm`;
+    const thumbnailPath = `/home/pi/web/public/media/thumbnails/${videoId}_thumbnail.jpg`;
 
     // Proceed with the download
     const command = `/home/pi/.local/bin/yt-dlp -o "${videoPath}" ${youtubeLink}`;
@@ -111,30 +111,30 @@ app.post('/download-video', (req, res) => {
     });
 });
 
-// List videos with thumbnails
 app.get('/list-videos', (req, res) => {
-    const mediaDirectory = path.join(__dirname, 'media'); // Adjust the path as needed
-    const thumbnailsDirectory = path.join(mediaDirectory, 'thumbnails');
+    const videosDirectory = '../media/videos'; // Adjust this path
+    console.log(`Reading directory: ${videosDirectory}`); // Log the directory being read
 
-    fs.readdir(mediaDirectory, (err, files) => {
+    fs.readdir(videosDirectory, (err, files) => {
         if (err) {
             console.error("Could not list the directory.", err);
             return res.status(500).send('Internal Server Error');
         }
 
-        // Filter for video files and map to desired structure
+        console.log(`Found files: ${files.join(', ')}`); // Log found files
+
         const videos = files.filter(file => file.endsWith('.webm')).map(file => {
             const videoId = file.split('.webm')[0];
             return {
                 title: file,
-                path: `/media/${file}`,
-                thumbnail: `/media/thumbnails/${videoId}_thumbnail.jpg`
+                thumbnail: `${videoId}_thumbnail.jpg`
             };
         });
 
         res.json(videos);
     });
 });
+
 
 app.use(express.json());
 app.use(express.static('public'));
