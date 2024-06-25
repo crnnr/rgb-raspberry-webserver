@@ -44,8 +44,7 @@ function makeMove(row, col) {
             return;
         }
         if (checkForTie()) {
-            alert("It's a tie!");
-            startNewGame();
+            handleTie();
             return;
         }
         currentPlayer = currentPlayer === "X" ? "O" : "X";
@@ -79,7 +78,7 @@ function checkForWin(player) {
 function highlightWin(line) {
     line.forEach(index => {
         const winningCell = document.querySelectorAll('.cell')[index[0] * 3 + index[1]];
-        winningCell.style.color = 'green';
+        winningCell.classList.add('winning-cell');
     });
     displayWinnerOnMatrix(currentPlayer);
     gameActive = false; // Stop game
@@ -97,6 +96,15 @@ function displayWinnerOnMatrix(winner) {
 // Check tie
 function checkForTie() {
     return board.flat().every(cell => cell !== '');
+}
+
+// Handle tie
+function handleTie() {
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+        cell.classList.add('tie-cell');
+    });
+    gameActive = false; // Stop game
 }
 
 // Start new game

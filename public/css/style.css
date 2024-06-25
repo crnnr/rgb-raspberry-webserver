@@ -203,11 +203,15 @@ select {
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
 }
 
 .logo-container img {
-    width: 150px;
+    width: 250px;
     height: auto;
+    cursor: pointer;
 }
 
 /* Content container */
@@ -353,4 +357,72 @@ input[type="text"]:focus {
     border-color: #80bdff;
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Winning animation */
+@keyframes win-animation {
+    0% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+    50% {
+        background-color: #ffeb3b;
+        transform: scale(1.2);
+    }
+    100% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+}
+
+.winning-cell {
+    animation: win-animation 1s ease-in-out infinite;
+}
+
+/* Winning animation */
+@keyframes win-animation {
+    0% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+    50% {
+        background-color: #ffeb3b;
+        transform: scale(1.2);
+    }
+    100% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+}
+
+.winning-cell {
+    animation: win-animation 1s ease-in-out infinite;
+}
+
+/* Tie animation */
+@keyframes tie-animation {
+    0% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+    25% {
+        background-color: #5d5d5b;
+        transform: scale(1.1);
+    }
+    50% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+    75% {
+        background-color: #5d5d5b;
+        transform: scale(1.1);
+    }
+    100% {
+        background-color: #f0f0f0;
+        transform: scale(1);
+    }
+}
+
+.tie-cell {
+    animation: tie-animation 1s ease-in-out infinite;
 }
