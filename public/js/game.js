@@ -4,13 +4,15 @@ const board = [
     ['', '', ''],
     ['', '', '']
 ];
-let gameActive = true; //allow or prevent move
+let gameActive = true; // Allow moves
 
+// On page load
 document.addEventListener('DOMContentLoaded', () => {
     initializeBoard();
     document.getElementById('new-game').addEventListener('click', startNewGame);
 });
 
+// Initialize board
 function initializeBoard() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
@@ -30,8 +32,9 @@ function initializeBoard() {
     }
 }
 
+// Make move
 function makeMove(row, col) {
-    if (!gameActive) return; // Stop any moves game is not active
+    if (!gameActive) return; // Stop if not active
     if (board[row][col] === '') {
         board[row][col] = currentPlayer;
         const cell = document.querySelectorAll('.cell')[row * 3 + col];
@@ -47,10 +50,11 @@ function makeMove(row, col) {
         }
         currentPlayer = currentPlayer === "X" ? "O" : "X";
     } else {
-        alert("This cell is already taken. Please choose another cell.");
+        alert("Cell taken. Choose another.");
     }
 }
 
+// Check win
 function checkForWin(player) {
     const winConditions = [
         [[0, 0], [0, 1], [0, 2]],
@@ -71,15 +75,17 @@ function checkForWin(player) {
     });
 }
 
+// Highlight win
 function highlightWin(line) {
     line.forEach(index => {
         const winningCell = document.querySelectorAll('.cell')[index[0] * 3 + index[1]];
         winningCell.style.color = 'green';
     });
     displayWinnerOnMatrix(currentPlayer);
-    gameActive = false; // Stop game after win
+    gameActive = false; // Stop game
 }
 
+// Display winner
 function displayWinnerOnMatrix(winner) {
     fetch(`/display-winner`, {
         method: 'POST',
@@ -88,12 +94,14 @@ function displayWinnerOnMatrix(winner) {
     });
 }
 
+// Check tie
 function checkForTie() {
     return board.flat().every(cell => cell !== '');
 }
 
+// Start new game
 function startNewGame() {
-    gameActive = true; // Reactivate the game
+    gameActive = true; // Reactivate game
     fetch('/reset-game', { method: 'POST' })
         .then(() => {
             board.forEach(row => row.fill(''));
@@ -102,4 +110,3 @@ function startNewGame() {
         })
         .catch(error => console.error('Error:', error));
 }
-

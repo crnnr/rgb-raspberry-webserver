@@ -1,3 +1,4 @@
+// Apply effect
 function applyEffect() {
     const effect = document.getElementById('effect-dropdown').value;
     fetch(`/led/effect/${effect}`, { method: 'GET' })
@@ -6,10 +7,12 @@ function applyEffect() {
         .catch(error => console.error('Error:', error));
 }
 
+// On page load
 document.addEventListener('DOMContentLoaded', function() {
     fetchVideos();
 });
 
+// Setup video click listeners
 function setupVideoClickListeners() {
     const videoItems = document.querySelectorAll('.video-item');
     videoItems.forEach(videoItem => {
@@ -20,6 +23,7 @@ function setupVideoClickListeners() {
     });
 }
 
+// Display on LED matrix
 function displayOnLEDMatrix(videoName) {
     fetch(`/display-video?name=${encodeURIComponent(videoName)}`, { method: 'GET' })
         .then(response => response.json())
@@ -27,22 +31,18 @@ function displayOnLEDMatrix(videoName) {
         .catch(error => console.error('Error:', error));
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    fetchVideos();
-});
-
+// Fetch videos
 function fetchVideos() {
     fetch('/list-videos')
         .then(response => response.json())
         .then(videos => {
             const videosListContainer = document.getElementById('videos-list');
-            videosListContainer.innerHTML = ''; // Clear the container before adding new content
+            videosListContainer.innerHTML = ''; // Clear container
             videos.forEach(video => {
-                // Assuming 'video.thumbnail' gives just the filename like 'pRpeEdMmmQ0_thumbnail.jpg'
                 const thumbnailPath = `../media/thumbnails/${video.thumbnail}`;
                 const videoElement = document.createElement('div');
                 videoElement.className = 'video-item';
-                const videoName = video.title.replace('.webm', ''); // Assuming titles are filenames
+                const videoName = video.title.replace('.webm', '');
                 videoElement.dataset.videoName = videoName;
                 videoElement.innerHTML = `
                     <div class="video-thumbnail">
@@ -57,6 +57,7 @@ function fetchVideos() {
     .catch(error => console.error('Error fetching videos:', error));
 }
 
+// Control LED
 function controlLed(action) {
     let url = `/led/${action}`;
     if (action === 'on') {
@@ -70,6 +71,7 @@ function controlLed(action) {
         .catch(error => console.error('Error:', error));
 }
 
+// Download video
 function downloadVideo() {
     const link = document.getElementById('youtubeLink').value;
     const progressContainer = document.getElementById('progress-container');
@@ -77,12 +79,12 @@ function downloadVideo() {
 
     if (link) {
         document.getElementById('youtubeLink').value = ''; // Clear input
-        progressContainer.style.display = 'block'; // progress bar container
+        progressContainer.style.display = 'block'; // Show progress bar
         progressBar.value = 0; // Reset progress bar
 
         let progressInterval = setInterval(() => {
             if (progressBar.value < 90) {
-                progressBar.value += 10; // Simulate progress lol
+                progressBar.value += 10; // Simulate progress
             }
         }, 1000); // Update every second
 
@@ -101,7 +103,7 @@ function downloadVideo() {
         })
         .catch(error => {
             console.error('Error downloading the file:', error);
-            clearInterval(progressInterval); // Ensure interval is cleared on error
+            clearInterval(progressInterval); // Clear interval on error
         });
     } else {
         alert("Please enter a YouTube link.");

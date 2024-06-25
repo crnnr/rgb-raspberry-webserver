@@ -1,6 +1,6 @@
-// ledController.js
 const { exec } = require('child_process');
 
+// Run command
 function runCommand(command) {
   return new Promise((resolve, reject) => {
     exec(command, (err, stdout, stderr) => {
@@ -17,13 +17,12 @@ function runCommand(command) {
   });
 }
 
+// Turn on LED
 module.exports.turnOn = function () {
   return runCommand('sudo /home/pi/rpi-rgb-led-matrix-master/examples-api-use/demo -D 9 --led-rows 64 --led-cols 64 --led-chained 3 --led-parallel 2 --led-slowdown-gpio 4 --led-brightness 100');
-  // Add the correct command to turn on or trigger a specific animation
 };
 
+// Turn off LED
 module.exports.turnOff = function () {
-  // For turning off, you might need a specific command to clear the display or a workaround if there's no direct way.
-  // This example uses a command placeholder. Replace it with an actual command.
   return runCommand('sudo /home/pi/rpi-rgb-led-matrix-master/utils/led-clear');
 };

@@ -7,7 +7,7 @@ const port = 3000;
 
 const videosDirectory = path.resolve(__dirname, '../media/videos');
 
-// Ensure the videos directory exists
+// Ensure videos directory exists
 if (!fs.existsSync(videosDirectory)) {
     fs.mkdirSync(videosDirectory, { recursive: true });
     console.log(`Created directory: ${videosDirectory}`);
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.static('../public'));
 app.use('/thumbnails', express.static(path.join('../media', 'thumbnails')));
 
-// Turn on the LED matrix with a dynamic "-D" value
+// Turn on LED matrix
 app.get('/led/on', (req, res) => {
     const dValue = req.query.d || '9';
     if (!['0', '5', '6', '7', '8', '9', '10', '11'].includes(dValue)) {
@@ -34,7 +34,7 @@ app.get('/led/on', (req, res) => {
     });
 });
 
-// Turn off the LED matrix
+// Turn off LED matrix
 app.get('/led/off', (req, res) => {
     exec('sudo pkill -f demo', (err, stdout, stderr) => {
         if (err) {
@@ -45,7 +45,7 @@ app.get('/led/off', (req, res) => {
     });
 });
 
-// Shutdown the Raspberry Pi
+// Shutdown Raspberry Pi
 app.post('/api/shutdown', (req, res) => {
     exec('sudo shutdown now', (err, stdout, stderr) => {
         if (err) {
@@ -56,6 +56,7 @@ app.post('/api/shutdown', (req, res) => {
     });
 });
 
+// Display video
 app.get('/display-video', (req, res) => {
     const videoName = req.query.name;
     if (!videoName) {
@@ -76,6 +77,7 @@ app.get('/display-video', (req, res) => {
     });
 });
 
+// Download video
 app.post('/download-video', (req, res) => {
     const youtubeLink = req.body.youtubeLink;
     if (!youtubeLink) {
@@ -113,8 +115,9 @@ app.post('/download-video', (req, res) => {
     });
 });
 
+// List videos
 app.get('/list-videos', (req, res) => {
-    console.log(`Reading directory: ${videosDirectory}`); 
+    console.log(`Reading directory: ${videosDirectory}`);
 
     fs.readdir(videosDirectory, (err, files) => {
         if (err) {
@@ -122,7 +125,7 @@ app.get('/list-videos', (req, res) => {
             return res.status(500).send('Internal Server Error');
         }
 
-        console.log(`Found files: ${files.join(', ')}`); 
+        console.log(`Found files: ${files.join(', ')}`);
 
         const videos = files.filter(file => file.endsWith('.webm')).map(file => {
             const videoId = file.split('.webm')[0];
@@ -141,6 +144,7 @@ app.use(express.static('public'));
 
 let gameState = [["", "", ""], ["", "", ""], ["", "", ""]];
 
+// Handle move
 app.post('/move', (req, res) => {
     const { row, col, player } = req.body;
     if (gameState[row][col] === "") {
@@ -152,26 +156,29 @@ app.post('/move', (req, res) => {
     }
 });
 
+// Display winner
 app.post('/display-winner', (req, res) => {
     const { winner } = req.body;
     const message = `${winner} wins!`;
-    displayMessageOnMatrix(message); 
+    displayMessageOnMatrix(message);
     res.send("Winner displayed on LED matrix");
 });
 
+// Display message
 function displayMessageOnMatrix(message) {
-    console.log(message); 
+    console.log(message);
 }
 
 app.post('/reset-game', (req, res) => {
     gameState = [["", "", ""], ["", "", ""], ["", "", ""]];
-    clearLEDMatrix(); 
-    initLEDMatrix(); 
+    clearLEDMatrix();
+    initLEDMatrix();
     res.send("Game and LED matrix reset successfully");
 });
 
+// Update LED matrix
 function updateLEDMatrix() {
-    const colors = { X: 'R', O: 'G' }; 
+    const colors = { X: 'R', O: 'G' };
     gameState.forEach((row, i) => {
         row.forEach((cell, j) => {
             if (cell !== "") {
@@ -184,6 +191,7 @@ function updateLEDMatrix() {
     });
 }
 
+// Clear LED matrix
 function clearLEDMatrix() {
     let command = 'sudo /home/pi/rpi-rgb-led-matrix-master/utils/led-clear';
     exec(command, (err) => {
@@ -191,11 +199,12 @@ function clearLEDMatrix() {
     });
 }
 
+// Initialize LED matrix
 function initLEDMatrix() {
     console.log("Initializing LED Matrix with a 3x3 grid");
 }
 
+// Start server
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
-

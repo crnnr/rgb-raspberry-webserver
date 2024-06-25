@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="logo-container">
+        <a href="index.html"><img src="media/logos/logo.svg" alt="Logo"></a>
+    </div>
     <h1>YouTube Video Downloader</h1>
-    Enter YouTube Link:
+    <label for="youtubeLink">Enter YouTube Link:</label>
     <input type="text" id="youtubeLink">
     <button onclick="downloadVideo()">Download</button>
     <div id="progress-container" style="display:none;">
@@ -20,7 +23,6 @@
     <!-- Videos will be dynamically inserted here -->
     </div>
     <button onclick="stopvideo()">Stop Video</button>
-
-
 </body>
 </html>
+
