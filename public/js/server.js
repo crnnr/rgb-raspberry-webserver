@@ -2,6 +2,7 @@ const express = require('express');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const session = require('express-session');
 const app = express();
 const port = 3000;
 
@@ -16,6 +17,13 @@ if (!fs.existsSync(videosDirectory)) {
 app.use(express.json());
 app.use(express.static('../public'));
 app.use('/thumbnails', express.static(path.join('../media', 'thumbnails')));
+
+app.use(session({
+    secret: 'your_secret_key', // Replace with a secure key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
 
 // Turn on LED matrix
 app.get('/led/on', (req, res) => {
@@ -41,6 +49,7 @@ app.get('/led/off', (req, res) => {
             console.error(`exec error: ${err}`);
             return res.status(500).send('Failed to turn off LED Matrix');
         }
+        req.session.videoRunning = false; // Reset session
         res.send("LED Matrix turned OFF");
     });
 });
@@ -58,6 +67,10 @@ app.post('/api/shutdown', (req, res) => {
 
 // Display video
 app.get('/display-video', (req, res) => {
+    if (req.session.videoRunning) {
+        return res.status(400).json({ message: 'A video is already running. Please stop it first.' });
+    }
+
     const videoName = req.query.name;
     if (!videoName) {
         return res.status(400).json({ message: 'No video name provided' });
@@ -73,6 +86,7 @@ app.get('/display-video', (req, res) => {
         }
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
+        req.session.videoRunning = true; // Set session
         res.json({ message: 'Video is being displayed on the LED matrix.' });
     });
 });
