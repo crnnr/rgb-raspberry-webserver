@@ -7,8 +7,8 @@ const port = 3000;
 
 
 app.use(express.json());
-app.use(express.static('/home/pi/web/public'));
-app.use('/thumbnails', express.static(path.join('/home/pi/web/public/media', 'thumbnails')));
+app.use(express.static('../public'));
+app.use('/thumbnails', express.static(path.join('../public/media', 'thumbnails')));
 
 
 // Turn on the LED matrix with a dynamic "-D" value
@@ -197,7 +197,7 @@ function initLEDMatrix() {
     console.log("Initializing LED Matrix with a 3x3 grid");
 }
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
 
