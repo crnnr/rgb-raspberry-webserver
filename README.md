@@ -198,7 +198,3 @@ This project provides a web interface for controlling an LED matrix display and 
 - **Alerts and Messages:**
     - The web interface shows alerts for various actions such as video download completion, session handling errors, and invalid input.
     - Server responses include status messages for easier debugging and user feedback.
-
----
-
-This README provides a comprehensive guide to setting up, using, and understanding the project. If you encounter any issues or have further questions, please refer to the documentation or reach out for support.
