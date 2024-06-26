@@ -24,16 +24,40 @@ function setupVideoClickListeners() {
 }
 
 // Display on LED matrix
+// Display on LED matrix
 function displayOnLEDMatrix(videoName) {
     fetch(`/display-video?name=${encodeURIComponent(videoName)}`, { method: 'GET' })
         .then(response => response.json())
         .then(data => {
-            if (data.message) {
+            if (data.message.includes('already running')) {
+                alert(data.message);
+            } else {
                 alert(data.message);
             }
         })
         .catch(error => console.error('Error:', error));
 }
+
+// Control LED
+function controlLed(action) {
+    let url = `/led/${action}`;
+    if (action === 'on') {
+        const dValue = document.getElementById('dValue').value;
+        url += `?d=${dValue}`;
+    }
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            if (data.includes('already running')) {
+                alert(data);
+            } else {
+                alert(data);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
 
 // Fetch videos
 function fetchVideos() {
@@ -58,21 +82,7 @@ function fetchVideos() {
             });
             setupVideoClickListeners();
         })
-        .catch(error => console.error('Error fetching videos:', error));
-}
-
-// Control LED
-function controlLed(action) {
-    let url = `/led/${action}`;
-    if (action === 'on') {
-        const dValue = document.getElementById('dValue').value;
-        url += `?d=${dValue}`;
-    }
-
-    fetch(url)
-        .then(response => response.text())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
+    .catch(error => console.error('Error fetching videos:', error));
 }
 
 // Download video

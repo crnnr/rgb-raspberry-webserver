@@ -2,9 +2,10 @@ const express = require('express');
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const session = require('express-session');
 const app = express();
 const port = 3000;
+
+let processRunning = false; // Global variable to track running processes
 
 const videosDirectory = path.resolve(__dirname, '../media/videos');
 
@@ -18,22 +19,28 @@ app.use(express.json());
 app.use(express.static('../public'));
 app.use('/thumbnails', express.static(path.join('../media', 'thumbnails')));
 
-app.use(session({
-    secret: 'your_secret_key', // Replace with a secure key
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false } // Set to true if using HTTPS
-}));
+// Helper function to start a process
+function startProcess(command, callback) {
+    if (processRunning) {
+        callback(new Error('Process is already running'));
+    } else {
+        processRunning = true;
+        exec(command, (err, stdout, stderr) => {
+            processRunning = false;
+            callback(err, stdout, stderr);
+        });
+    }
+}
 
 // Turn on LED matrix
 app.get('/led/on', (req, res) => {
     const dValue = req.query.d || '9';
-    if (!['0', '5', '6', '7', '8', '9', '10', '11'].includes(dValue)) {
+    if (!['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'].includes(dValue)) {
         return res.status(400).send('Invalid "-D" value');
     }
 
     const command = `sudo /home/pi/rpi-rgb-led-matrix-master/examples-api-use/demo -D ${dValue} --led-rows 64 --led-cols 64 --led-chained 6 --led-slowdown-gpio 4 --led-brightness 100 --led-daemon`;
-    exec(command, (err, stdout, stderr) => {
+    startProcess(command, (err, stdout, stderr) => {
         if (err) {
             console.error(`exec error: ${err}`);
             return res.status(500).send('Failed to turn on LED Matrix');
@@ -44,33 +51,17 @@ app.get('/led/on', (req, res) => {
 
 // Turn off LED matrix
 app.get('/led/off', (req, res) => {
-    exec('sudo pkill -f demo', (err, stdout, stderr) => {
+    startProcess('sudo pkill -f demo', (err, stdout, stderr) => {
         if (err) {
             console.error(`exec error: ${err}`);
             return res.status(500).send('Failed to turn off LED Matrix');
         }
-        req.session.videoRunning = false; // Reset session
         res.send("LED Matrix turned OFF");
-    });
-});
-
-// Shutdown Raspberry Pi
-app.post('/api/shutdown', (req, res) => {
-    exec('sudo shutdown now', (err, stdout, stderr) => {
-        if (err) {
-            console.error(`exec error: ${err}`);
-            return res.status(500).send('Failed to shut down');
-        }
-        res.send('Shutting down...');
     });
 });
 
 // Display video
 app.get('/display-video', (req, res) => {
-    if (req.session.videoRunning) {
-        return res.status(400).json({ message: 'A video is already running. Please stop it first.' });
-    }
-
     const videoName = req.query.name;
     if (!videoName) {
         return res.status(400).json({ message: 'No video name provided' });
@@ -79,14 +70,13 @@ app.get('/display-video', (req, res) => {
     const videoPath = path.join(videosDirectory, `${videoName}.webm`);
     const command = `sudo ./../utils/video-viewer --led-cols=64 --led-rows=64 --led-chain=6 --led-limit-refresh=200 --led-slowdown-gpio=4 --led-pixel-mapper="U-Mapper;Rotate:180" -F ${videoPath}`;
 
-    exec(command, (error, stdout, stderr) => {
+    startProcess(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`exec error: ${error}`);
             return res.status(500).json({ message: 'Error displaying the video' });
         }
         console.log(`stdout: ${stdout}`);
         console.error(`stderr: ${stderr}`);
-        req.session.videoRunning = true; // Set session
         res.json({ message: 'Video is being displayed on the LED matrix.' });
     });
 });

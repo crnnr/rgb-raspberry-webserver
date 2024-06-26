@@ -8,21 +8,20 @@
 </head>
 <body>
     <div class="logo-container">
-        <a href="index.html"><img src="media/logos/logo.svg" alt="Logo"></a>
+        <a href="index.html"><img src="media/logos/logo.svg" alt="Logo"></a> <!-- Link to homepage with logo -->
     </div>
     <h1>YouTube Video Downloader</h1>
     <label for="youtubeLink">Enter YouTube Link:</label>
-    <input type="text" id="youtubeLink">
-    <button onclick="downloadVideo()">Download</button>
+    <input type="text" id="youtubeLink"> <!-- Input for YouTube link -->
+    <button onclick="downloadVideo()">Download</button> <!-- Button to start video download -->
     <div id="progress-container" style="display:none;">
         <label for="file">Downloading:</label>
-        <progress id="downloadProgress" value="0" max="100"></progress>
+        <progress id="downloadProgress" value="0" max="100"></progress> <!-- Progress bar for download -->
     </div>
-    <script src="js/script.js"></script>
+    <script src="js/script.js"></script> <!-- Link to main script -->
     <div id="videos-list">
     <!-- Videos will be dynamically inserted here -->
     </div>
-    <button onclick="stopvideo()">Stop Video</button>
+    <button onclick="stopvideo()">Stop Video</button> <!-- Button to stop video -->
 </body>
 </html>
-
